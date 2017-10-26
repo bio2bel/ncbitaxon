@@ -1,0 +1,21 @@
+# -*- coding: utf-8 -*-
+
+from pybel_tools.ols_utils import OlsConstrainedNamespaceOntology
+
+__all__ = [
+    'MODULE_NAME',
+    'MODULE_ROOT',
+    'ontology',
+]
+
+MODULE_NAME = 'ncbitaxon'
+MODULE_ROOT = 'http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FNCBITaxon_131567'
+MODULE_DOMAIN = None
+MODULE_FUNCTIONS = None
+
+ontology = OlsConstrainedNamespaceOntology(
+    ontology=MODULE_NAME,
+    namespace_domain=MODULE_DOMAIN,
+    bel_function=MODULE_FUNCTIONS,
+    base_term_iri=MODULE_ROOT
+)

@@ -1,2 +1,0 @@
-# ncbitaxon
-NCBI Taxonony Tree
