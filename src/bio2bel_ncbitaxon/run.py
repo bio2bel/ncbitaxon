@@ -16,6 +16,6 @@ MODULE_FUNCTIONS = None
 ontology = OlsConstrainedNamespaceOntology(
     ontology=MODULE_NAME,
     namespace_domain=MODULE_DOMAIN,
+    base_term_iri=MODULE_ROOT,
     bel_function=MODULE_FUNCTIONS,
-    base_term_iri=MODULE_ROOT
 )

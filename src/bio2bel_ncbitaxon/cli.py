@@ -31,8 +31,8 @@ def write(ols_base, output):
     ontology = OlsConstrainedNamespaceOntology(
         ontology=MODULE_NAME,
         namespace_domain=MODULE_DOMAIN,
-        bel_function=MODULE_FUNCTIONS,
         base_term_iri=MODULE_ROOT,
+        bel_function=MODULE_FUNCTIONS,
         ols_base=ols_base
     )
 
@@ -49,8 +49,8 @@ def deploy(ols_base=None, no_hash_check=False):
     ontology = OlsConstrainedNamespaceOntology(
         ontology=MODULE_NAME,
         namespace_domain=MODULE_DOMAIN,
-        bel_function=MODULE_FUNCTIONS,
         base_term_iri=MODULE_ROOT,
+        bel_function=MODULE_FUNCTIONS,
         ols_base=ols_base
     )
     success = ontology.deploy_annotation(hash_check=(not no_hash_check))
