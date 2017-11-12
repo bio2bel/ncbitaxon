@@ -10,8 +10,8 @@ __all__ = [
 
 MODULE_NAME = 'ncbitaxon'
 MODULE_ROOT = 'http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FNCBITaxon_131567'
-MODULE_DOMAIN = None
-MODULE_FUNCTIONS = None
+MODULE_DOMAIN = False
+MODULE_FUNCTIONS = False
 
 ontology = OlsConstrainedNamespaceOntology(
     ontology=MODULE_NAME,
