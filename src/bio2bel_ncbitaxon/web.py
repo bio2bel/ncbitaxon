@@ -10,8 +10,8 @@ from pytaxtree.manager.models import *
 from pytaxtree.manager.query import QueryManager
 
 
-def add_admin(app, session, url=None):
-    admin = flask_admin.Admin(app, url=(url or '/'))
+def add_admin(app, session, **kwargs):
+    admin = flask_admin.Admin(app, **kwargs)
     admin.add_view(ModelView(Node, session))
     admin.add_view(ModelView(Name, session))
     admin.add_view(ModelView(Division, session))
@@ -24,6 +24,7 @@ def create_app(connection=None, url=None):
     """Creates a Flask application
 
     :type connection: Optional[str]
+    :type url: Optional[str]
     :rtype: flask.Flask
     """
     app = Flask(__name__)
