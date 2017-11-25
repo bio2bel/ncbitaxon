@@ -11,6 +11,7 @@ META_PATH = os.path.join('src', 'bio2bel_ncbitaxon', '__init__.py')
 INSTALL_REQUIRES = [
     'pybel_tools>=0.4.4',
     'click',
+    'bio2bel',
 ]
 ENTRY_POINTS = {
     'bio2bel': [

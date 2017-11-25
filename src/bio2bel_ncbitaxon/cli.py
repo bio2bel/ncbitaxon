@@ -9,8 +9,8 @@ import sys
 
 import click
 
-from bio2bel.constants import DEFAULT_CACHE_CONNECTION
 from pybel_tools.ols_utils import OlsConstrainedNamespaceOntology
+from .constants import DEFAULT_CACHE_CONNECTION
 from .run import MODULE_DOMAIN, MODULE_FUNCTIONS, MODULE_NAME, MODULE_ROOT
 
 logging.basicConfig(level=logging.INFO)
@@ -73,6 +73,7 @@ def web(connection):
     from bio2bel_ncbitaxon.web import create_app
     app = create_app(connection=connection)
     app.run(host='0.0.0.0', port=5000)
+
 
 if __name__ == '__main__':
     main()
