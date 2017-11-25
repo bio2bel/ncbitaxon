@@ -1,0 +1,37 @@
+# -*- coding: utf-8 -*-
+
+""" This module contains the flask application to visualize the db"""
+
+import flask_admin
+from flask import Flask
+from flask_admin.contrib.sqla import ModelView
+
+from pytaxtree.manager.models import *
+from pytaxtree.manager.query import QueryManager
+
+
+def add_admin(app, session, url=None):
+    admin = flask_admin.Admin(app, url=(url or '/'))
+    admin.add_view(ModelView(Node, session))
+    admin.add_view(ModelView(Name, session))
+    admin.add_view(ModelView(Division, session))
+    admin.add_view(ModelView(GeneticCode, session))
+    admin.add_view(ModelView(Citation, session))
+    return admin
+
+
+def create_app(connection=None, url=None):
+    """Creates a Flask application
+
+    :type connection: Optional[str]
+    :rtype: flask.Flask
+    """
+    app = Flask(__name__)
+    manager = QueryManager(connection=connection)
+    add_admin(app, manager.session, url=url)
+    return app
+
+
+if __name__ == '__main__':
+    app = create_app()
+    app.run(debug=True, host='0.0.0.0', port=5000)

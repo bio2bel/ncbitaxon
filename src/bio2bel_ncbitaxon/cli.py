@@ -9,6 +9,7 @@ import sys
 
 import click
 
+from bio2bel.constants import DEFAULT_CACHE_CONNECTION
 from pybel_tools.ols_utils import OlsConstrainedNamespaceOntology
 from .run import MODULE_DOMAIN, MODULE_FUNCTIONS, MODULE_NAME, MODULE_ROOT
 
@@ -21,6 +22,14 @@ log.setLevel(logging.INFO)
 @click.group()
 def main():
     """NCBI Taxonomy Tree to BEL"""
+
+
+@main.command()
+@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
+def populate(connection):
+    """Populate the database"""
+    import pytaxtree
+    pytaxtree.update(connection=connection)
 
 
 @main.command()
@@ -56,6 +65,14 @@ def deploy(ols_base=None, no_hash_check=False):
     success = ontology.deploy_annotation(hash_check=(not no_hash_check))
     click.echo('Deployed to {}'.format(success) if success else 'Duplicate not deployed')
 
+
+@main.command()
+@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
+def web(connection):
+    """Run web"""
+    from bio2bel_ncbitaxon.web import create_app
+    app = create_app(connection=connection)
+    app.run(host='0.0.0.0', port=5000)
 
 if __name__ == '__main__':
     main()
