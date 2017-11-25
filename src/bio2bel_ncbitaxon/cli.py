@@ -11,6 +11,7 @@ import click
 
 from pybel_tools.ols_utils import OlsConstrainedNamespaceOntology
 from .constants import DEFAULT_CACHE_CONNECTION
+from .manager import Manager
 from .run import MODULE_DOMAIN, MODULE_FUNCTIONS, MODULE_NAME, MODULE_ROOT
 
 logging.basicConfig(level=logging.INFO)
@@ -28,8 +29,8 @@ def main():
 @click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
 def populate(connection):
     """Populate the database"""
-    import pytaxtree
-    pytaxtree.update(connection=connection)
+    manager = Manager(connection=connection)
+    manager.populate()
 
 
 @main.command()
