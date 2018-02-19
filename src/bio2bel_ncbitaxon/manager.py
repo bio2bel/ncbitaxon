@@ -17,3 +17,14 @@ class Manager(DbManager):
 
     def populate(self):
         self.db_import()
+
+    @staticmethod
+    def ensure(connection=None):
+        """
+        :param connection: A connection string, a manager, or none to use the default manager
+        :type connection: Optional[str or Manager]
+        :rtype: Manager
+        """
+        if connection is None or isinstance(connection, str):
+            return Manager(connection=connection)
+        return connection
