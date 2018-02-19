@@ -1,16 +1,28 @@
 # -*- coding: utf-8 -*-
 
-""" This module contains the flask application to visualize the db"""
+"""This module builds a :mod:`Flask` application for interacting with the underlying database. When installing,
+use the web extra like:
 
+.. source-code:: sh
+
+    pip install bio2bel_ncbitaxon[web]
+"""
 import flask_admin
 from flask import Flask
 from flask_admin.contrib.sqla import ModelView
 
-from pytaxtree.manager.models import *
-from pytaxtree.manager.query import QueryManager
+from bio2bel_ncbitaxon import Manager
+from bio2bel_ncbitaxon.models import *
 
 
 def add_admin(app, session, **kwargs):
+    """Adds a Flask Admin interface to an application
+
+    :param flask.Flask app:
+    :param session:
+    :param kwargs:
+    :rtype: flask_admin.Admin
+    """
     admin = flask_admin.Admin(app, **kwargs)
     admin.add_view(ModelView(Node, session))
     admin.add_view(ModelView(Name, session))
@@ -20,19 +32,19 @@ def add_admin(app, session, **kwargs):
     return admin
 
 
-def create_app(connection=None, url=None):
+def get_app(connection=None, url=None):
     """Creates a Flask application
 
-    :type connection: Optional[str]
+    :type connection: Optional[str or bio2bel_ncbitaxon.Manager]
     :type url: Optional[str]
     :rtype: flask.Flask
     """
     app = Flask(__name__)
-    manager = QueryManager(connection=connection)
+    manager = Manager.ensure(connection=connection)
     add_admin(app, manager.session, url=url)
     return app
 
 
 if __name__ == '__main__':
-    app = create_app()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app_ = get_app()
+    app_.run(debug=True, host='0.0.0.0', port=5000)
