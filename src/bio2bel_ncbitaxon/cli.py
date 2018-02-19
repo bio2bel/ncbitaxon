@@ -9,10 +9,10 @@ import sys
 
 import click
 
-from pybel_tools.ols_utils import OlsConstrainedNamespaceOntology
+from pybel_tools.ols_utils import OlsConstrainedAnnotationOntology
 from .constants import DEFAULT_CACHE_CONNECTION
 from .manager import Manager
-from .run import MODULE_DOMAIN, MODULE_FUNCTIONS, MODULE_NAME, MODULE_ROOT
+from .run import MODULE_NAME, MODULE_ROOT
 
 logging.basicConfig(level=logging.INFO)
 
@@ -21,58 +21,57 @@ log.setLevel(logging.INFO)
 
 
 @click.group()
-def main():
+@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
+@click.pass_context
+def main(ctx, connection):
     """NCBI Taxonomy Tree to BEL"""
+    logging.basicConfig(level=10, format="%(asctime)s - %(levelname)s - %(message)s")
+    ctx.obj = Manager(connection=connection)
 
 
 @main.command()
-@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
-def populate(connection):
+@click.pass_obj
+def populate(manager):
     """Populate the database"""
-    manager = Manager(connection=connection)
     manager.populate()
 
 
-@main.command()
-@click.option('-b', '--ols-base', help="Custom OLS base url")
-@click.option('-o', '--output', type=click.File('w'), default=sys.stdout)
-def write(ols_base, output):
-    """Writes BEL annotation file"""
-    ontology = OlsConstrainedNamespaceOntology(
+@main.group()
+@click.option('-b', '--ols-base', help="Custom OLS base url. Defaults to {}")
+@click.pass_context
+def ols(ctx, ols_base):
+    """OLS Utilities"""
+    ctx.obj = OlsConstrainedAnnotationOntology(
         ontology=MODULE_NAME,
-        namespace_domain=MODULE_DOMAIN,
         base_term_iri=MODULE_ROOT,
-        bel_function=MODULE_FUNCTIONS,
         ols_base=ols_base
     )
 
-    log.info('Starting to download NCBI Taxon from OLS at %s', ontology.ols_client.base)
 
+@ols.command()
+@click.option('-o', '--output', type=click.File('w'), default=sys.stdout)
+@click.pass_obj
+def write(ontology, output):
+    """Writes BEL annotation file"""
+    log.info('Starting to download NCBI Taxon from OLS at %s', ontology.ols_client.base)
     ontology.write_annotation(output)
 
 
-@main.command()
-@click.option('-b', '--ols-base', help="Custom OLS base url")
+@ols.command()
 @click.option('--no-hash-check', is_flag=True)
-def deploy(ols_base=None, no_hash_check=False):
+@click.pass_obj
+def deploy(ontology, no_hash_check=False):
     """Deploy BEL annotation file to Artifactory"""
-    ontology = OlsConstrainedNamespaceOntology(
-        ontology=MODULE_NAME,
-        namespace_domain=MODULE_DOMAIN,
-        base_term_iri=MODULE_ROOT,
-        bel_function=MODULE_FUNCTIONS,
-        ols_base=ols_base
-    )
     success = ontology.deploy_annotation(hash_check=(not no_hash_check))
     click.echo('Deployed to {}'.format(success) if success else 'Duplicate not deployed')
 
 
 @main.command()
-@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
-def web(connection):
+@click.pass_obj
+def web(manager):
     """Run web"""
-    from bio2bel_ncbitaxon.web import create_app
-    app = create_app(connection=connection)
+    from bio2bel_ncbitaxon.web import get_app
+    app = get_app(connection=manager)
     app.run(host='0.0.0.0', port=5000)
 
 
