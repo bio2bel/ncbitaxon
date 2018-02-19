@@ -9,10 +9,14 @@ import setuptools
 PACKAGES = setuptools.find_packages(where='src')
 META_PATH = os.path.join('src', 'bio2bel_ncbitaxon', '__init__.py')
 INSTALL_REQUIRES = [
-    'pybel_tools>=0.4.4',
     'click',
+    'sqlalchemy==1.1.15',
+    'pybel_tools>=0.5.0',
     'bio2bel',
 ]
+EXTRAS_REQUIRE = {
+    'web': ['flask', 'flask_admin'],
+}
 ENTRY_POINTS = {
     'bio2bel': [
         'ncbitaxon = bio2bel_ncbitaxon',
@@ -67,5 +71,6 @@ if __name__ == '__main__':
         packages=PACKAGES,
         package_dir={'': 'src'},
         install_requires=INSTALL_REQUIRES,
+        extras_require=EXTRAS_REQUIRE,
         entry_points=ENTRY_POINTS,
     )
