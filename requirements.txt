@@ -4,3 +4,4 @@ bio2bel
 pybel_tools>=0.5.0
 flask[web]
 flask_admin[web]
+https://gitlab.scai.fraunhofer.de/bio/PyTaxTree.git
