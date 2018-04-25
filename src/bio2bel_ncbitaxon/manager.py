@@ -21,6 +21,15 @@ class Manager(AbstractManager, DbManager):
     def count_nodes(self):
         return self._count_model(Node)
 
+    def count_names(self):
+        return self._count_model(Name)
+
+    def summarize(self):
+        return dict(
+            nodes=self.count_nodes(),
+            names=self.count_names(),
+        )
+
     def is_populated(self):
         return 0 < self.count_nodes()
 
